@@ -4,7 +4,8 @@
 import socket
 import json, time, os
 from collections import namedtuple
-from ds_protocol import extract_json, join, bio_post, write_command, directmessage
+from ds_protocol import extract_json, join, write_command, directmessage
+
 
 class DirectMessage(dict):
     """ 
@@ -54,59 +55,73 @@ class DirectMessage(dict):
 
 
 class DirectMessenger:
-  def __init__(self, dsuserver=None, username=None, password=None):
-    self.token = None
-    self.dsuserver = dsuserver
-    self.username = username
-    self.password = password
-		
-  def send(self, message:str, recipient:str) -> bool:
-    '''
-    The send function joins a ds server and sends a message, bio, or both
+    def __init__(self, dsuserver=None, username=None, password=None):
+        self.token = None
+        self.dsuserver = dsuserver
+        self.username = username
+        self.password = password
 
-    :param server: The ip address for the ICS 32 DS server.
-    :param port: The port where the ICS 32 DS server is accepting connections.
-    :param username: The user name to be assigned to the message.
-    :param password: The password associated with the username.
-    :param message: The message to be sent to the server.
-    :param bio: Optional, a bio for the user.
-    '''
+    def send_function(self, server:str, port:int, username:str, password:str, message:str, recipient=''):
 
 
-    PORT = 3021
-    HOST = self.dsuserver
+        PORT = port
+        HOST = server
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
-          client.connect((HOST, PORT))
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client:
+              client.connect((HOST, PORT))
 
-          send = client.makefile('w')
-          recv = client.makefile('r')
+              send = client.makefile('w')
+              recv = client.makefile('r')
 
-          print("client connected to", HOST, "on", PORT)
+              print("client connected to", HOST, "on", PORT)
 
-          join_msg = join(self.username, self.password)
-          write_command(send, join_msg)
+              join_msg = join(self.username, self.password)
+              write_command(send, join_msg)
 
-          srv_msg = recv.readline()
-          print("Response", srv_msg)
-          if extract_json(srv_msg).message_type == 'ok':
-            user_token = extract_json(srv_msg)[1]
-            
-            dm = DirectMessage(message, recipient)
-            print(dm)
-            dm_msg = directmessage(user_token, dm)
-            write_command(send, dm_msg)
-            srv_msg = recv.readline()
-            print("Response", srv_msg)
-            if extract_json(srv_msg).message_type == 'ok':
-                return True
+              srv_msg = recv.readline()
+              print("Response", srv_msg)
+              if extract_json(srv_msg).message_type == 'ok':
+                user_token = extract_json(srv_msg)[1]
+
+                if recipient != '':
+                    dm = DirectMessage(message, recipient)
+                    print(dm)
+                else:
+                    dm = message
+                dm_msg = directmessage(user_token, dm)
+                write_command(send, dm_msg)
+                srv_msg = recv.readline()
+                print("Response", srv_msg)
+                return extract_json(srv_msg).message
+                    
 
 
 		
-  def retrieve_new(self) -> list:
-    # returns a list of DirectMessage objects containing all new messages
-    pass
- 
-  def retrieve_all(self) -> list:
-    # returns a list of DirectMessage objects containing all messages
-    pass
+    def send(self, message:str, recipient:str) -> bool:
+        server = self.dsuserver
+        port = 3021
+        usr = self.username
+        pwd = self.password
+        if self.send_function(server, port, usr, pwd, message, recipient) == "Direct message sent":
+            return True
+
+                
+    def retrieve_new(self) -> list:
+        server = self.dsuserver
+        port = 3021
+        usr = self.username
+        pwd = self.password
+        dm_lst = []
+        for msg in self.send_function(server, port, usr, pwd, "new"):
+            dm_lst.append(msg)
+        return dm_lst
+
+    def retrieve_all(self) -> list:
+        server = self.dsuserver
+        port = 3021
+        usr = self.username
+        pwd = self.password
+        dm_lst = []
+        for msg in self.send_function(server, port, usr, pwd, "all"):
+            dm_lst.append(msg)
+        return dm_lst
