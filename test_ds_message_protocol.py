@@ -6,7 +6,7 @@ import json
 
 
 
-class CommandTest(unittest.TestCase):
+class DSMessageTest(unittest.TestCase):
     dm_msg = {"entry": "Hello World!","recipient":"ohhimark", "timestamp": "1603167689.3928561"}
     dm_new = "new"
     dm_all = "all"
