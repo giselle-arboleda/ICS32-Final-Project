@@ -1,8 +1,7 @@
 # ds_protocol.py
 
-# Giselle Arboleda
-# garboled@uci.edu
-# 87396936
+# Giselle Arboleda, Karissa Pratt, Evan Fok
+
 
 import json
 from collections import namedtuple
@@ -51,6 +50,16 @@ def join(username, password, user_token=''):
   return json_obj
 
 
+def bio_post(user_token, bio_or_post, entry):
+  '''
+  Accept token, the word "bio" or "post", and an entry and creates a formatted bio or post message
+  for the DSP server. Call the json.dumps function on a python message and convert
+  it to a json object. Returns the object.
+  '''
+  python_msg = {"token": user_token, bio_or_post: {"entry": entry,"timestamp": "1603167689.3928561"}}
+  json_obj = json.dumps(python_msg)
+  
+  return json_obj
 
 def write_command(connection, msg: str):
   '''
@@ -80,7 +89,3 @@ def directmessage(user_token, message):
 
 
 
-
-
-  
-  
