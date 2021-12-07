@@ -37,6 +37,7 @@ class Body(tk.Frame):
     is selected.
     """
     def node_select(self, event):
+        #self.footer.send_button.configure(command=self.send_click, state=tk.NORMAL)  #DEBUG
         self.set_text_display("")
         index = int(self.recipients_tree.selection()[0])
         self.current_recipient = self._recipients[index]
@@ -183,9 +184,9 @@ class Footer(tk.Frame):
     Call only once upon initialization to add widgets to the frame
     """
     def _draw(self):
-        send_button = tk.Button(master=self, text="Send", width=20)
-        send_button.configure(command=self.send_click)
-        send_button.pack(fill=tk.BOTH, side=tk.RIGHT, padx=5, pady=5)
+        self.send_button = tk.Button(master=self, text="Send", width=20)
+        self.send_button.configure(command=self.send_click)  #DEBUG , state=tk.DISABLED
+        self.send_button.pack(fill=tk.BOTH, side=tk.RIGHT, padx=5, pady=5)
 
         self.footer_label = tk.Label(master=self, text="Ready.")
         self.footer_label.pack(fill=tk.BOTH, side=tk.LEFT, padx=5)
@@ -252,6 +253,7 @@ class MainApp(tk.Frame):
             entry += 'Incoming: ' + msg['message'] + '\n\n'
         if msgs:
             self.body.add_text_display(entry)
+        self.body.set_text_entry("")
 
 
 
@@ -278,15 +280,39 @@ class MainApp(tk.Frame):
 
 
     def add_user(self):
-        #win = tk.Tk()  DEBUG
         top= tk.Toplevel(self)
         top.geometry("750x250")
         #Create an Entry Widget in the Toplevel window
         entry= tk.Entry(top, width= 25)
         entry.pack()
         #Create a Button to print something in the Entry widget
-        tk.Button(top,text= "Insert", command= lambda:self.insert_val(entry, top)).pack(pady= 5,side=tk.TOP)  #DEBUG
+        tk.Button(top,text= "Insert", command= lambda:self.insert_val(entry, top)).pack(pady= 5,side=tk.TOP)
 
+    def color_mode_on(self):
+        '''
+        Turning Night Mode On
+        '''
+        green = '#91C286'
+        red = '#D15656'
+        white = 'white'
+        self.footer.config(bg=red)
+        self.footer.footer_label.config(bg=green)
+        self.footer.send_button.config(bg = green)
+        self.body.display.config(bg = red)
+        self.body.entry_editor.config(bg = green)
+        #self.body.recipients_tree.config(bg = red)
+    def color_mode_off(self):
+        '''
+        Turning Night Mode Off
+        '''
+        main_color = "white"
+        self.footer.config(bg=main_color)
+        self.footer.footer_label.config(bg=main_color)
+        self.footer.send_button.config(bg = main_color)
+        self.body.config(bg = main_color)
+        self.body.display.config(bg = main_color)
+        self.body.entry_editor.config(bg = main_color)
+        pass
 
     
     """
@@ -307,6 +333,9 @@ class MainApp(tk.Frame):
         # command items when clicked. But there are others. A single button or checkbox, for example,
         # could also be added to the menu bar.
 
+        #Creating a "Flourish" feature --> Night Mode
+        menu_file.add_command(label='Christmas Mode On', command=self.color_mode_on)
+        menu_file.add_command(label='Christmas Mode Off', command=self.color_mode_off)
 
         # The Body and Footer classes must be initialized and packed into the root window.
         self.body = Body(self.root)
