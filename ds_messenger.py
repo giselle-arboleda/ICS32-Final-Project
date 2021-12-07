@@ -1,5 +1,5 @@
 #ds_messenger.py
-
+# Giselle Arboleda, Karissa Pratt, and Evan Fok
 
 import socket
 import json, time, os

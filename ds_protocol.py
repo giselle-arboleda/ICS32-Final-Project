@@ -1,5 +1,4 @@
 # ds_protocol.py
-
 # Giselle Arboleda, Karissa Pratt, Evan Fok
 
 
@@ -84,8 +83,3 @@ def directmessage(user_token, message):
   json_obj = json.dumps(python_msg)
   
   return json_obj
-
-
-
-
-
