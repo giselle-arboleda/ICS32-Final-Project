@@ -8,9 +8,31 @@ from ds_protocol import extract_json, join, write_command, directmessage
 from pathlib import Path
 
 
+class Recipient(dict):
+    """
+    The Recipient class is responsible for working with the username and user's messages. It sets the username and messages as attributes of the class upon instantiation.
+    """
+
+    def __init__(self, username, messages=[]):
+        self.set_username(username)
+        self.set_messages(messages)
+        dict.__init__(self, username=self.username, messages=self.messages)
+
+    def set_username(self, u):
+        #Sets the username
+        self.username = u
+        dict.__setitem__(self, 'username', u)
+
+    def set_messages(self, m):
+        #Sets the messages
+        self.messages = m
+        dict.__setitem__(self, 'messages', m)
+        
+    
 class DirectMessage(dict):
     """ 
-    DMs
+    The DirectMessege class works with the entry, recipient, sender, and timestamp. Upon instantiation
+    it sets the given entry, timestamp, and recipient if given one.
     """
     def __init__(self, entry:str = None, recipient:str = None, sender = None, timestamp:float = 0):
         self._timestamp = timestamp
@@ -26,6 +48,7 @@ class DirectMessage(dict):
             dict.__init__(self, entry=self._entry, recipient=self._recipient, timestamp=self._timestamp)
     
     def set_entry(self, entry):
+        #sets the given entry into a class attribute
         self._entry = entry 
         dict.__setitem__(self, 'entry', entry)
 
@@ -34,29 +57,32 @@ class DirectMessage(dict):
             self._timestamp = time.time()
             
     def set_recipient(self, r):
+        #sets the recipient
         self._recipient = r 
         dict.__setitem__(self, 'recipient', r)
 
     def set_sender(self, send):
+        #sets the sender
         self.sender = send
         dict.__setitem__(self, 'sender', send)
         
     def get_entry(self):
+        #returns the entries
         return self._entry
     
     def set_time(self, time:float):
+        #sets timestamp with the given time in the parameter
         self._timestamp = time
         dict.__setitem__(self, 'timestamp', time)
     
     def get_time(self):
+        #returns the timestamp
         return self._timestamp
 
     """
-
     The property method is used to support get and set capability for entry and time values.
     When the value for entry is changed, or set, the timestamp field is updated to the
     current time.
-
     """ 
     entry = property(get_entry, set_entry)
     timestamp = property(get_time, set_time)
@@ -64,16 +90,28 @@ class DirectMessage(dict):
 
 
 class DirectMessenger:
-    def __init__(self, dsuserver=None, username=None, password=None):
+    """
+    The DirectMesseger class works with the dsuserver, username, and password. If given a username and password,
+    it sets the values into attributes of the class with the initializer. The attributes also include...
+    self._msgs -> list of messages
+    self._recipients -> a list of Recipient objects
+    self._recipients_names -> a list of recipient names in string format
+    """
+    def __init__(self, dsuserver='168.235.86.101', username=None, password=None):
         self.token = None
         self.dsuserver = dsuserver
         self.username = username
         self.password = password
         self._msgs = []         # OPTIONAL   DEBUG
         self._recipients = []    # OPTIONAL   DEBUG
+        self._recipients_names = []
 
+    """
+    The send_function connects to and joins a ds server while sending a message. If there is a recipient
+    passed into the parameter, it sends a direct message to that recipient with the message given. 
+    """
     def send_function(self, server:str, port:int, username:str, password:str, message:str, recipient1=''):
-
+    
 
         PORT = port
         HOST = server
@@ -105,20 +143,32 @@ class DirectMessenger:
                 print("Response", srv_msg)
                 return extract_json(srv_msg).message
                     
+    
 
-
-		
+    """
+    The send function adds a recipient to the recipient list if the recipient is new.
+    Returns true if the message was successfully sent and false if the send failed. 
+    """
     def send(self, message:str, recipient:str) -> bool:
         server = self.dsuserver
         port = 3021
         usr = self.username
         pwd = self.password
-        if recipient not in self._recipients:
-            self._recipients.append(recipient)
+        if recipient not in self._recipients_names:
+            self.add_recipient(recipient)
+        for r in self._recipients:
+            index = self._recipients.index(r)
+            if recipient == r['username']:
+                self._recipients[index]['messages'].append('You: '+message)
         if self.send_function(server, port, usr, pwd, message, recipient) == "Direct message sent":
             return True
 
-                
+
+    """
+    The retrive_new method returns a list of DirectMessage objects that contain all new messages.
+    Appends all new messages into a list and uses the "Incoming:" message to differentiate
+    between the recipient and sender.
+    """
     def retrieve_new(self) -> list:
         server = self.dsuserver
         port = 3021
@@ -127,8 +177,15 @@ class DirectMessenger:
         dm_lst = []
         for msg in self.send_function(server, port, usr, pwd, "new"):
             dm_lst.append(msg)
+            for r in self._recipients:
+                index = self._recipients.index(r)
+                if msg['from'] == r['username']:
+                    self._recipients[index]['messages'].append('Incoming: '+msg['message'])
         return dm_lst
-
+    """
+    The retrive_all method returns a list of DirectMessage objects which contain all of the messages
+    that have been sent. 
+    """
     def retrieve_all(self) -> list:
         server = self.dsuserver
         port = 3021
@@ -137,41 +194,37 @@ class DirectMessenger:
         dm_lst = []
         for msg in self.send_function(server, port, usr, pwd, "all"):
             dm_lst.append(msg)
-            if msg not in self._msgs:
-                self.add_msg(msg)
         return dm_lst
 
 
 
 
 
-
+    """
+    The add_recipient function appends a Recipient object to the private attribute "_recipients"
+    while also appending the recipient names as a string to "_recipients_names" for later use.
+    """
     def add_recipient(self, recipient: str) -> None:
-        self._recipients.append(recipient)
+        self._recipients_names.append(recipient)
+        self._recipients.append(Recipient(username=recipient, messages=[]))
 
-
+    """
+    The get_recipients returns a list of recipients as a 'Recipient' that were stored in the classes attributes.
+    """
     def get_recipients(self) -> list:
         return self._recipients
+
     """
-
-    add_post accepts a Post object as parameter and appends it to the posts list. Posts are stored in a 
-    list object in the order they are added. So if multiple Posts objects are created, but added to the 
-    Profile in a different order, it is possible for the list to not be sorted by the Post.timestamp property. 
-    So take caution as to how you implement your add_post code.
-
+    add_msg accepts a DirectMessage object as parameter and appends it to the msg list. Msgs are stored in a 
+    list object in the order they are added. 
     """
 
     def add_msg(self, msg: DirectMessage) -> None:
         self._msgs.append(msg)
 
     """
-
-    del_post removes a Post at a given index and returns True if successful and False if an invalid 
+    del_msg removes a msg at a given index and returns True if successful and False if an invalid 
     index was supplied. 
-
-    To determine which post to delete you must implement your own search operation on the posts 
-    returned from the get_posts function to find the correct index.
-
     """
 
     def del_msg(self, index: int) -> bool:
@@ -183,23 +236,17 @@ class DirectMessenger:
         
     """
     
-    get_posts returns the list object containing all posts that have been added to the Profile object
-
+    get_msgs returns the list object containing all msgs that have been stored in the private attribute.
     """
     def get_msgs(self) -> list:
         return self._msgs
 
     """
-
     save_profile accepts an existing dsu file to save the current instance of Profile to the file system.
-
     Example usage:
-
-    profile = Profile()
-    profile.save_profile('/path/to/file.dsu')
-
+    _current_profile = DirectMessenger()
+    _current_profile.save_profile('/path/to/file.dsu')
     Raises DsuFileError
-
     """
     def save_profile(self, path: str) -> None:
         p = path.replace(os.sep, '\\')
@@ -216,16 +263,11 @@ class DirectMessenger:
             raise DsuFileError("Invalid DSU file path or type")
 
     """
-
-    load_profile will populate the current instance of Profile with data stored in a DSU file.
-
+    load_profile will populate the current instance of DirectMessager() with data stored in a DSU file.
     Example usage: 
-
-    profile = Profile()
-    profile.load_profile('/path/to/file.dsu')
-
+    _current_profile = DirectMessenger()
+    _current_profile.load_profile('/path/to/file.dsu')
     Raises DsuProfileError, DsuFileError
-
     """
     def load_profile(self, path: str) -> None:
         p = Path(path)
@@ -244,6 +286,8 @@ class DirectMessenger:
                     self._msgs.append(msg)
                 for rec in obj['_recipients']:
                     self._recipients.append(rec)
+                for name in obj['_recipients_names']:
+                    self._recipients_names.append(name)
                 f.close()
             except Exception as ex:
                 raise DsuProfileError(ex)
