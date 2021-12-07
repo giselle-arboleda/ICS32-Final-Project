@@ -106,13 +106,12 @@ class DirectMessenger:
         self._recipients = []    # OPTIONAL   DEBUG
         self._recipients_names = []
 
-    """
-    The send_function connects to and joins a ds server while sending a message. If there is a recipient
-    passed into the parameter, it sends a direct message to that recipient with the message given. 
-    """
-    def send_function(self, server:str, port:int, username:str, password:str, message:str, recipient1=''):
-    
 
+    def send_function(self, server:str, port:int, username:str, password:str, message:str, recipient1=''):
+        """
+        The send_function connects to and joins a ds server while sending a message. If there is a recipient
+        passed into the parameter, it sends a direct message to that recipient with the message given. 
+        """
         PORT = port
         HOST = server
 
@@ -145,11 +144,12 @@ class DirectMessenger:
                     
     
 
-    """
-    The send function adds a recipient to the recipient list if the recipient is new.
-    Returns true if the message was successfully sent and false if the send failed. 
-    """
+
     def send(self, message:str, recipient:str) -> bool:
+        """
+        The send function adds a recipient to the recipient list if the recipient is new.
+        Returns true if the message was successfully sent and false if the send failed. 
+        """
         server = self.dsuserver
         port = 3021
         usr = self.username
@@ -164,12 +164,13 @@ class DirectMessenger:
             return True
 
 
-    """
-    The retrive_new method returns a list of DirectMessage objects that contain all new messages.
-    Appends all new messages into a list and uses the "Incoming:" message to differentiate
-    between the recipient and sender.
-    """
+
     def retrieve_new(self) -> list:
+        """
+        The retrive_new method returns a list of DirectMessage objects that contain all new messages.
+        Appends all new messages into a list and uses the "Incoming:" message to differentiate
+        between the recipient and sender.
+        """
         server = self.dsuserver
         port = 3021
         usr = self.username
@@ -182,11 +183,12 @@ class DirectMessenger:
                 if msg['from'] == r['username']:
                     self._recipients[index]['messages'].append('Incoming: '+msg['message'])
         return dm_lst
-    """
-    The retrive_all method returns a list of DirectMessage objects which contain all of the messages
-    that have been sent. 
-    """
+
     def retrieve_all(self) -> list:
+        """
+        The retrive_all method returns a list of DirectMessage objects which contain all of the messages
+        that have been sent. 
+        """
         server = self.dsuserver
         port = 3021
         usr = self.username
@@ -200,55 +202,56 @@ class DirectMessenger:
 
 
 
-    """
-    The add_recipient function appends a Recipient object to the private attribute "_recipients"
-    while also appending the recipient names as a string to "_recipients_names" for later use.
-    """
+
     def add_recipient(self, recipient: str) -> None:
+        """
+        The add_recipient function appends a Recipient object to the private attribute "_recipients"
+        while also appending the recipient names as a string to "_recipients_names" for later use.
+        """
         self._recipients_names.append(recipient)
         self._recipients.append(Recipient(username=recipient, messages=[]))
 
-    """
-    The get_recipients returns a list of recipients as a 'Recipient' that were stored in the classes attributes.
-    """
+
     def get_recipients(self) -> list:
+        """
+        The get_recipients returns a list of recipients as a 'Recipient' that were stored in the classes attributes.
+        """
         return self._recipients
 
-    """
-    add_msg accepts a DirectMessage object as parameter and appends it to the msg list. Msgs are stored in a 
-    list object in the order they are added. 
-    """
-
     def add_msg(self, msg: DirectMessage) -> None:
+        """
+        add_msg accepts a DirectMessage object as parameter and appends it to the msg list. Msgs are stored in a 
+        list object in the order they are added. 
+        """
         self._msgs.append(msg)
 
-    """
-    del_msg removes a msg at a given index and returns True if successful and False if an invalid 
-    index was supplied. 
-    """
-
     def del_msg(self, index: int) -> bool:
+        """
+        del_msg removes a msg at a given index and returns True if successful and False if an invalid 
+        index was supplied. 
+        """
         try:
             del self._msgs[index]
             return True
         except IndexError:
             return False
         
-    """
-    
-    get_msgs returns the list object containing all msgs that have been stored in the private attribute.
-    """
+
     def get_msgs(self) -> list:
+        """
+        get_msgs returns the list object containing all msgs that have been stored in the private attribute.
+        """
         return self._msgs
 
-    """
-    save_profile accepts an existing dsu file to save the current instance of Profile to the file system.
-    Example usage:
-    _current_profile = DirectMessenger()
-    _current_profile.save_profile('/path/to/file.dsu')
-    Raises DsuFileError
-    """
+
     def save_profile(self, path: str) -> None:
+        """
+        save_profile accepts an existing dsu file to save the current instance of Profile to the file system.
+        Example usage:
+        _current_profile = DirectMessenger()
+        _current_profile.save_profile('/path/to/file.dsu')
+        Raises DsuFileError
+        """
         p = path.replace(os.sep, '\\')
         p = Path(p)
 
@@ -262,14 +265,15 @@ class DirectMessenger:
         else:
             raise DsuFileError("Invalid DSU file path or type")
 
-    """
-    load_profile will populate the current instance of DirectMessager() with data stored in a DSU file.
-    Example usage: 
-    _current_profile = DirectMessenger()
-    _current_profile.load_profile('/path/to/file.dsu')
-    Raises DsuProfileError, DsuFileError
-    """
+
     def load_profile(self, path: str) -> None:
+        """
+        load_profile will populate the current instance of DirectMessager() with data stored in a DSU file.
+        Example usage: 
+        _current_profile = DirectMessenger()
+        _current_profile.load_profile('/path/to/file.dsu')
+        Raises DsuProfileError, DsuFileError
+        """
         p = Path(path)
 
         if os.path.exists(p):
