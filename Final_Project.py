@@ -61,7 +61,8 @@ class Body(tk.Frame):
         return self.entry_editor.get('1.0', 'end').rstrip()
 
     """
-    
+    The add_text_display method inserts the text into the display and disables
+    interaction with the display.
     """
     def add_text_display(self, text:str, sent=None):
         if sent is True:
