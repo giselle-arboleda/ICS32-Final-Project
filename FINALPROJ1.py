@@ -106,24 +106,24 @@ class Body(tk.Frame):
         self.posts_tree.bind("<<TreeviewSelect>>", self.node_select)
         self.posts_tree.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=5, pady=5)
 
-        entry_frame = tk.Frame(master=self, bg="", height=100, width=100)
+        entry_frame = tk.Frame(master=self, bg="", height=50, width=100)
         entry_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
         
-        display_frame = tk.Frame(master=entry_frame, bg="red")
+        display_frame = tk.Frame(master=entry_frame, height=10, bg="red")
         display_frame.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
                 
-        editor_frame = tk.Frame(master=entry_frame, bg="red")
+        editor_frame = tk.Frame(master=entry_frame, bg="red", height=10)
         editor_frame.pack(fill=tk.BOTH, expand=True)
 
         
         scroll_frame = tk.Frame(master=entry_frame, bg="blue", width=10)
         scroll_frame.pack(fill=tk.BOTH, side=tk.LEFT, expand=False)
 
-        self.display = tk.Text(display_frame, width=0, state=tk.DISABLED)
+        self.display = tk.Text(display_frame, width=0, state=tk.DISABLED, height=10)
         self.display.pack(fill=tk.BOTH, side=tk.TOP, expand=True, padx=0, pady=0)
         
-        self.entry_editor = tk.Text(editor_frame, width=0)
+        self.entry_editor = tk.Text(editor_frame, width=0, height=10)
         self.entry_editor.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)
         
 
@@ -271,7 +271,7 @@ if __name__ == "__main__":
 
     # This is just an arbitrary starting point. You can change the value around to see how
     # the starting size of the window changes. I just thought this looked good for our UI.
-    main.geometry("1280x1024")
+    main.geometry("720x480")
 
     # adding this option removes some legacy behavior with menus that modern OSes don't support. 
     # If you're curious, feel free to comment out and see how the menu changes.
