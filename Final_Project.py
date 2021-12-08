@@ -314,13 +314,19 @@ class MainApp(tk.Frame):
 
 
     def close_win(self, top):
-       top.destroy()
+        '''
+        Closes the window.
+        '''
+        top.destroy()
        
     def insert_val(self, entry, top):
-        """
+        '''
         The insert_val method is called when the user clicks the "Insert" button when adding a new user.
-        It will get the entry and add it to the profile and save the profile. 
-        """
+        It will get the entry and add it to the profile and save the profile.
+
+        Functionalty of being able to get the username of a target recipient was inspired by this resource:
+        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter
+        '''
         recipient = entry.get()
         self._current_profile.add_recipient(recipient)
         self._current_profile.save_profile(self._profile_filename)
@@ -332,7 +338,10 @@ class MainApp(tk.Frame):
     def add_user(self):
         """
         The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".
-        When this method is called it creates a pop up that prompts the user to input a name. 
+        When this method is called it creates a pop up that prompts the user to input a name.
+
+        Functionalty of being able to get the username of a target recipient was inspired by this resource:
+        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter
         """
         if self.selected_profile == True:
             self.footer.set_status("Adding user...")

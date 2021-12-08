@@ -445,13 +445,19 @@ Final_Project    </h1>
 
 
     <span class="k">def</span> <span class="nf">close_win</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-       <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="sd">'''</span>
+<span class="sd">        Closes the window.</span>
+<span class="sd">        '''</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
        
     <span class="k">def</span> <span class="nf">insert_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">'''</span>
 <span class="sd">        The insert_val method is called when the user clicks the "Insert" button when adding a new user.</span>
-<span class="sd">        It will get the entry and add it to the profile and save the profile. </span>
-<span class="sd">        """</span>
+<span class="sd">        It will get the entry and add it to the profile and save the profile.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
+<span class="sd">        '''</span>
         <span class="n">recipient</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">add_recipient</span><span class="p">(</span><span class="n">recipient</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
@@ -463,7 +469,10 @@ Final_Project    </h1>
     <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
-<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
+<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
@@ -1626,13 +1635,19 @@ available, when the send_button has been clicked.</p>
 
 
     <span class="k">def</span> <span class="nf">close_win</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-       <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="sd">'''</span>
+<span class="sd">        Closes the window.</span>
+<span class="sd">        '''</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
        
     <span class="k">def</span> <span class="nf">insert_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">'''</span>
 <span class="sd">        The insert_val method is called when the user clicks the "Insert" button when adding a new user.</span>
-<span class="sd">        It will get the entry and add it to the profile and save the profile. </span>
-<span class="sd">        """</span>
+<span class="sd">        It will get the entry and add it to the profile and save the profile.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
+<span class="sd">        '''</span>
         <span class="n">recipient</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">add_recipient</span><span class="p">(</span><span class="n">recipient</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
@@ -1644,7 +1659,10 @@ available, when the send_button has been clicked.</p>
     <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
-<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
+<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
@@ -1956,12 +1974,17 @@ indexes messages as "Incoming:" and "You:".</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">close_win</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-       <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="sd">'''</span>
+<span class="sd">        Closes the window.</span>
+<span class="sd">        '''</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Closes the window.</p>
+</div>
+
 
                             </div>
                             <div id="MainApp.insert_val" class="classattr">
@@ -1975,10 +1998,13 @@ indexes messages as "Incoming:" and "You:".</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">insert_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
-        <span class="sd">"""</span>
+        <span class="sd">'''</span>
 <span class="sd">        The insert_val method is called when the user clicks the "Insert" button when adding a new user.</span>
-<span class="sd">        It will get the entry and add it to the profile and save the profile. </span>
-<span class="sd">        """</span>
+<span class="sd">        It will get the entry and add it to the profile and save the profile.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
+<span class="sd">        '''</span>
         <span class="n">recipient</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">add_recipient</span><span class="p">(</span><span class="n">recipient</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
@@ -1991,6 +2017,9 @@ indexes messages as "Incoming:" and "You:".</p>
 
             <div class="docstring"><p>The insert_val method is called when the user clicks the "Insert" button when adding a new user.
 It will get the entry and add it to the profile and save the profile.</p>
+
+<p>Functionalty of being able to get the username of a target recipient was inspired by this resource:
+https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</p>
 </div>
 
 
@@ -2008,7 +2037,10 @@ It will get the entry and add it to the profile and save the profile.</p>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
-<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
+<span class="sd">        When this method is called it creates a pop up that prompts the user to input a name.</span>
+
+<span class="sd">        Functionalty of being able to get the username of a target recipient was inspired by this resource:</span>
+<span class="sd">        https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
@@ -2028,6 +2060,9 @@ It will get the entry and add it to the profile and save the profile.</p>
 
             <div class="docstring"><p>The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".
 When this method is called it creates a pop up that prompts the user to input a name.</p>
+
+<p>Functionalty of being able to get the username of a target recipient was inspired by this resource:
+https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter</p>
 </div>
 
 
@@ -2307,7 +2342,7 @@ unless the user selects a recipient to send to.</p>
     </main>
 <script>
     /* Periodically check with the pdoc server if there have been any changes. */
-    let mtime_generated = "1638929659.8",
+    let mtime_generated = "1638931400.1",
         url = new URL(window.location);
     url.searchParams.set("mtime", 1);
     window.setInterval(function () {
