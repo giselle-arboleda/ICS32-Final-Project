@@ -8,6 +8,21 @@
 # The following module provides a graphical user interface shell for the DSP journaling program.
 #
 # Giselle Arboleda, Karissa Pratt, and Evan Fok
+
+# Karissa Pratt
+# krpratt@uci.edu
+# 80778808
+
+# Giselle Arboleda
+# garboled@uci.edu
+# 87396936
+
+# Evan Fok
+# efok1@uci.edu
+# 87505923
+
+
+
 import tkinter as tk
 from tkinter import ttk, filedialog
 from ds_messenger import DirectMessage, DirectMessenger

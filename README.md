@@ -13,28 +13,44 @@ capable of sending and receiving direct messages with another user on the DSP pl
 =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 HOW TO USE
 
-Run the project by opening "FINALPROJ1.py" file.
+Run the project by opening the "FINALPROJ1.py" file.
 
 =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 FUNCTIONALITY
 
-Before you can send messages to anybody, you will need to add a User you would like to chat with.
-You can achieve this by pressing the "Add User" button, which is positioned in the bottomleft of the screen.
-A popup will appear, prompting you to enter to the username of the user you would like to chat with.
-Do so and hit enter. A direct message with this user will appear in the textbox above the "Add User" button.
+When you open the DSU Messenger, you must first load a file. Do this by clicking "File/Settings" 
+in the top left then selecting either the "New" or "Open..." options.
+The "New" selection will prompt you to create a new .dsu file, while the "Open..." selection will open a prexisting one.
 
-This leftmost textbox is your recent messages list. Posts sent and recieved by you can be seen here.
-In order to chat with this user, click on their name in the recent messages list.
-The toprightmost textbox is the chat log.
-A log of direct messages sent by and to the current selected user is here.
+Next, you will need to select a user to start messaging with.
+If you do not have any users loaded already, go to "File/Settings" then select "Add User"
+You will be prompted to input the username of the user you would like to chat with. Do so and hit the "Insert" button.
 
-Directly below that is the text input. Type up what you want to send into the box, then hit the "Send" button
-(located below the text input on the bottom right of the screen) to send your message to the currently selected user.
+All of your loaded users will be visible in the list of usernames on the left of the messenger.
+In order to chat with a user, click on their name in the list of usernames.
+A log of messages sent and received from this user are visible in the chat log (toprightmost textbox).
+Directly below the log of messages is the text input.
+Type up what you want to send into the text input, then hit the "Send" button to directly message your selected user.
 
-A status bar on the bottom of screen provides information on what the GUI is currently processing.
-
+The status bar on the bottom left corner of screen will provide information on how to go through the messaging process,
+as well as if the DSU Messenger is currently busy updating.
 
 =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 CREDITS
 
 ICS32 Fall 2021 Final Project (Direct Messaging GUI) by Evan Fok, Karissa Pratt, and Giselle Arboleda.
+
+The following resource was used to collect the username of the target recipient in the insert_val() and add_user() methods:
+https://www.tutorialspoint.com/creating-a-popup-message-box-with-an-entry-field-in-tkinter
+
+# Karissa Pratt
+# krpratt@uci.edu
+# 80778808
+
+# Giselle Arboleda
+# garboled@uci.edu
+# 87396936
+
+# Evan Fok
+# efok1@uci.edu
+# 87505923
