@@ -202,7 +202,7 @@ class Footer(tk.Frame):
         self.send_button.configure(command=self.send_click, state=tk.DISABLED)
         self.send_button.pack(fill=tk.BOTH, side=tk.RIGHT, padx=5, pady=5)
 
-        self.footer_label = tk.Label(master=self, text="Ready.")
+        self.footer_label = tk.Label(master=self, text="Waiting for a .dsu file to be opened or created...")
         self.footer_label.pack(fill=tk.BOTH, side=tk.LEFT, padx=5)
 
 
@@ -216,6 +216,7 @@ class MainApp(tk.Frame):
         tk.Frame.__init__(self, root)
         self.root = root
         self._current_profile = DirectMessenger()
+        self.selected_profile = False
 
         # Initialize a new NaClProfile and assign it to a class attribute.
 
@@ -228,11 +229,23 @@ class MainApp(tk.Frame):
         """
         Creates a new DSU file when the 'New' menu item is clicked and sets the user name and password. 
         """
-        self.body.reset_ui()
-        filename = tk.filedialog.asksaveasfile(defaultextension=".dsu", filetypes=[('Distributed Social Profile', '*.dsu')])
-        self._profile_filename = filename.name
-        self._current_profile.username = 'WowWowWubbzy'
-        self._current_profile.password = 'ILikeMoney123'
+        try:
+            self.footer.set_status("Updating... Please be patient")
+            self.body.reset_ui()
+            filename = tk.filedialog.asksaveasfile(defaultextension=".dsu", filetypes=[('Distributed Social Profile', '*.dsu')])
+            self._profile_filename = filename.name
+            self._current_profile.username = 'WowWowWubbzy'
+            self._current_profile.password = 'ILikeMoney123'
+            self.footer.set_status("Profile successfully created.")
+            self.selected_profile = True
+        except:
+            self.footer.set_status("Waiting for a .dsu file to be opened or created...")
+
+        if self.selected_profile == True:
+            self.body.set_text_display("No user is selected. Either select a user from the list on the left, or add a new user through \"File/Settings\"")
+        else:
+            self.body.set_text_display("Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."
+                                   +"\nPress \"File/Settings\" in the banner, then select either \"New\" or \"Open...\"")
         
     
     def open_profile(self):
@@ -241,19 +254,33 @@ class MainApp(tk.Frame):
         data into the UI. The open_profile method also sets the recipients with the returned list
         given from get_recipients.
         """
-        self.body.reset_ui()
-        filename = tk.filedialog.askopenfile(filetypes=[('Distributed Social Profile', '*.dsu')])
-        self._profile_filename = filename.name
-        self._current_profile = DirectMessenger()
-        self._current_profile.load_profile(self._profile_filename)
-        self.body.reset_ui()
-        self.body.set_recipients(self._current_profile.get_recipients())
+        try:
+            self.footer.set_status("Updating... Please be patient")
+            self.body.reset_ui()
+            filename = tk.filedialog.askopenfile(filetypes=[('Distributed Social Profile', '*.dsu')])
+            self._profile_filename = filename.name
+            self._current_profile = DirectMessenger()
+            self._current_profile.load_profile(self._profile_filename)
+            self.body.reset_ui()
+            self.body.set_recipients(self._current_profile.get_recipients())
+            self.footer.set_status("Profile successfully opened.")
+            self.selected_profile = True
+        except:
+            self.footer.set_status("Profile could not be opened. Open a different file or create a new one instead.")
+
+        if self.selected_profile == True:
+            self.body.set_text_display("No user is selected. Either select a user from the list on the left, or add a new user through \"File/Settings\"")
+        else:
+            self.body.set_text_display("Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."
+                                   +"\nPress \"File/Settings\" in the banner, then select either \"New\" or \"Open...\"")
+        
     
     def close(self):
         """
         Closes the program when the 'Close' menu item is clicked.
         """
-        self._current_profile.save_profile(self._profile_filename)
+        if self.selected_profile == True:
+            self._current_profile.save_profile(self._profile_filename)
         self.root.destroy()
 
 
@@ -307,13 +334,18 @@ class MainApp(tk.Frame):
         The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".
         When this method is called it creates a pop up that prompts the user to input a name. 
         """
-        top= tk.Toplevel(self)
-        top.geometry("750x250")
-        #Create an Entry Widget in the Toplevel window
-        entry= tk.Entry(top, width= 25)
-        entry.pack()
-        #Create a Button to print something in the Entry widget
-        tk.Button(top,text= "Insert", command= lambda:self.insert_val(entry, top)).pack(pady= 5,side=tk.TOP)
+        if self.selected_profile == True:
+            self.footer.set_status("Adding user...")
+            top= tk.Toplevel(self)
+            top.geometry("200x100")
+            #Create an Entry Widget in the Toplevel window
+            entry= tk.Entry(top, width= 25)
+            entry.pack()
+            #Create a Button to print something in the Entry widget
+            tk.Button(top,text= "Insert", command= lambda:self.insert_val(entry, top)).pack(pady= 5,side=tk.TOP)
+            self.footer.set_status("User successfully added")
+        else:
+            self.footer.set_status("Please load a profile first.")
 
     def color_mode_on(self):
         """
@@ -378,7 +410,8 @@ class MainApp(tk.Frame):
         # The Body and Footer classes must be initialized and packed into the root window.
         self.body = Body(self.root, enable_send=self.enabling_send)
         self.body.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
-        self.body.set_text_display("Please create a New DSU File or Open an existing DSU File containing a DirectMessenger.")  #DEBUG
+        self.body.set_text_display("Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."
+                                   +"\nPress \"File/Settings\" in the banner, then select either \"New\" or \"Open...\"")  #DEBUG
         
 
         self.footer = Footer(self.root, send_callback=self.send_msg)
