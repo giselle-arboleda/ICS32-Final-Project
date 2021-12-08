@@ -32,6 +32,11 @@ A log of messages sent and received from this user are visible in the chat log (
 Directly below the log of messages is the text input.
 Type up what you want to send into the text input, then hit the "Send" button to directly message your selected user.
 
+When you are done using the DSU Messenger, select "Close" from the "File/Settings" dropdown to close the program.
+
+Additionally, the "File/Settings" dropdown has "Christmas Mode On" and "Christmas Mode Off" buttons.
+Click them for jolly good fun!
+
 The status bar on the bottom left corner of screen will provide information on how to go through the messaging process,
 as well as if the DSU Messenger is currently busy updating.
 
