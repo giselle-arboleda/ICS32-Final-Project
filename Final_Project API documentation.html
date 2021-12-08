@@ -333,7 +333,7 @@ Final_Project    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_button</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">send_click</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_button</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">"Ready."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">"Waiting for a .dsu file to be opened or created..."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 
@@ -347,6 +347,7 @@ Final_Project    </h1>
         <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Initialize a new NaClProfile and assign it to a class attribute.</span>
 
@@ -359,11 +360,23 @@ Final_Project    </h1>
         <span class="sd">"""</span>
 <span class="sd">        Creates a new DSU file when the 'New' menu item is clicked and sets the user name and password. </span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully created."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Waiting for a .dsu file to be opened or created..."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
         
     
     <span class="k">def</span> <span class="nf">open_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -372,19 +385,33 @@ Final_Project    </h1>
 <span class="sd">        data into the UI. The open_profile method also sets the recipients with the returned list</span>
 <span class="sd">        given from get_recipients.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully opened."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile could not be opened. Open a different file or create a new one instead."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        
     
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Closes the program when the 'Close' menu item is clicked.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 
 
@@ -438,13 +465,18 @@ Final_Project    </h1>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
 <span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
 <span class="sd">        """</span>
-        <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"750x250"</span><span class="p">)</span>
-        <span class="c1">#Create an Entry Widget in the Toplevel window</span>
-        <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
-        <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
-        <span class="c1">#Create a Button to print something in the Entry widget</span>
-        <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"200x100"</span><span class="p">)</span>
+            <span class="c1">#Create an Entry Widget in the Toplevel window</span>
+            <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+            <span class="c1">#Create a Button to print something in the Entry widget</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"User successfully added"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Please load a profile first."</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">color_mode_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -509,7 +541,8 @@ Final_Project    </h1>
         <span class="c1"># The Body and Footer classes must be initialized and packed into the root window.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">enable_send</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enabling_send</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span><span class="p">)</span>  <span class="c1">#DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>  <span class="c1">#DEBUG</span>
         
 
         <span class="bp">self</span><span class="o">.</span><span class="n">footer</span> <span class="o">=</span> <span class="n">Footer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">send_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">send_msg</span><span class="p">)</span>
@@ -1209,7 +1242,7 @@ as when a new DSU file is loaded, for example.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_button</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">send_click</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_button</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">"Ready."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">"Waiting for a .dsu file to be opened or created..."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">footer_label</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -1495,6 +1528,7 @@ available, when the send_button has been clicked.</p>
         <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Initialize a new NaClProfile and assign it to a class attribute.</span>
 
@@ -1507,11 +1541,23 @@ available, when the send_button has been clicked.</p>
         <span class="sd">"""</span>
 <span class="sd">        Creates a new DSU file when the 'New' menu item is clicked and sets the user name and password. </span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully created."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Waiting for a .dsu file to be opened or created..."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
         
     
     <span class="k">def</span> <span class="nf">open_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1520,19 +1566,33 @@ available, when the send_button has been clicked.</p>
 <span class="sd">        data into the UI. The open_profile method also sets the recipients with the returned list</span>
 <span class="sd">        given from get_recipients.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully opened."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile could not be opened. Open a different file or create a new one instead."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        
     
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Closes the program when the 'Close' menu item is clicked.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 
 
@@ -1586,13 +1646,18 @@ available, when the send_button has been clicked.</p>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
 <span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
 <span class="sd">        """</span>
-        <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"750x250"</span><span class="p">)</span>
-        <span class="c1">#Create an Entry Widget in the Toplevel window</span>
-        <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
-        <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
-        <span class="c1">#Create a Button to print something in the Entry widget</span>
-        <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"200x100"</span><span class="p">)</span>
+            <span class="c1">#Create an Entry Widget in the Toplevel window</span>
+            <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+            <span class="c1">#Create a Button to print something in the Entry widget</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"User successfully added"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Please load a profile first."</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">color_mode_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -1657,7 +1722,8 @@ available, when the send_button has been clicked.</p>
         <span class="c1"># The Body and Footer classes must be initialized and packed into the root window.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">enable_send</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enabling_send</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">BOTH</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span><span class="p">)</span>  <span class="c1">#DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>  <span class="c1">#DEBUG</span>
         
 
         <span class="bp">self</span><span class="o">.</span><span class="n">footer</span> <span class="o">=</span> <span class="n">Footer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">send_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">send_msg</span><span class="p">)</span>
@@ -1685,6 +1751,7 @@ the NaClProfile class.</p>
         <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Initialize a new NaClProfile and assign it to a class attribute.</span>
 
@@ -1718,11 +1785,23 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p>
         <span class="sd">"""</span>
 <span class="sd">        Creates a new DSU file when the 'New' menu item is clicked and sets the user name and password. </span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">asksaveasfile</span><span class="p">(</span><span class="n">defaultextension</span><span class="o">=</span><span class="s2">".dsu"</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s1">'WowWowWubbzy'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s1">'ILikeMoney123'</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully created."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Waiting for a .dsu file to be opened or created..."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -1748,13 +1827,25 @@ highlightcolor, highlightthickness, relief, takefocus, visual, width.</p>
 <span class="sd">        data into the UI. The open_profile method also sets the recipients with the returned list</span>
 <span class="sd">        given from get_recipients.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Updating... Please be patient"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfile</span><span class="p">(</span><span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'Distributed Social Profile'</span><span class="p">,</span> <span class="s1">'*.dsu'</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span> <span class="o">=</span> <span class="n">DirectMessenger</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">load_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">reset_ui</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_recipients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">get_recipients</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile successfully opened."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Profile could not be opened. Open a different file or create a new one instead."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"No user is selected. Either select a user from the list on the left, or add a new user through </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">set_text_display</span><span class="p">(</span><span class="s2">"Please create a New DSU File or Open an existing DSU File containing a DirectMessenger."</span>
+                                   <span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Press </span><span class="se">\"</span><span class="s2">File/Settings</span><span class="se">\"</span><span class="s2"> in the banner, then select either </span><span class="se">\"</span><span class="s2">New</span><span class="se">\"</span><span class="s2"> or </span><span class="se">\"</span><span class="s2">Open...</span><span class="se">\"</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -1780,7 +1871,8 @@ given from get_recipients.</p>
         <span class="sd">"""</span>
 <span class="sd">        Closes the program when the 'Close' menu item is clicked.</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_profile</span><span class="o">.</span><span class="n">save_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profile_filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
 </pre></div>
 
@@ -1918,13 +2010,18 @@ It will get the entry and add it to the profile and save the profile.</p>
 <span class="sd">        The add_user method is called when user clicks "Add User" from the drop down method in "File/Settings".</span>
 <span class="sd">        When this method is called it creates a pop up that prompts the user to input a name. </span>
 <span class="sd">        """</span>
-        <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"750x250"</span><span class="p">)</span>
-        <span class="c1">#Create an Entry Widget in the Toplevel window</span>
-        <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
-        <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
-        <span class="c1">#Create a Button to print something in the Entry widget</span>
-        <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selected_profile</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Adding user..."</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">top</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">"200x100"</span><span class="p">)</span>
+            <span class="c1">#Create an Entry Widget in the Toplevel window</span>
+            <span class="n">entry</span><span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Entry</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+            <span class="c1">#Create a Button to print something in the Entry widget</span>
+            <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">top</span><span class="p">,</span><span class="n">text</span><span class="o">=</span> <span class="s2">"Insert"</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span> <span class="k">lambda</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">insert_val</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">top</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">side</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">TOP</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"User successfully added"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="s2">"Please load a profile first."</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -2210,7 +2307,7 @@ unless the user selects a recipient to send to.</p>
     </main>
 <script>
     /* Periodically check with the pdoc server if there have been any changes. */
-    let mtime_generated = "1638919698.0",
+    let mtime_generated = "1638929659.8",
         url = new URL(window.location);
     url.searchParams.set("mtime", 1);
     window.setInterval(function () {
